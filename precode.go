@@ -54,7 +54,7 @@ func getTasks(res http.ResponseWriter, req *http.Request) {
 
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
-	res.Write(tasks)
+	_, _ = res.Write(tasks)
 }
 
 //Обработчик для отправки задачи на сервер
@@ -74,6 +74,9 @@ func postTask(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	if _, ok := tasks[task.ID]; !ok {
+		http.Error(res, "the task has already been submitted", http.StatusBadRequest)
+	}
 	tasks[task.ID] = task
 
 	res.Header().Set("Content-Type", "application/json")
@@ -96,7 +99,7 @@ func getTask(res http.ResponseWriter, req *http.Request) {
 	
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
-	res.Write(task)
+	_, _ = res.Write(task)
 }
 
 //Обработчик удаления задачи по ID
